@@ -2,28 +2,29 @@ Request count tracking API
 ==========================
 ##### Version: v1.0
 
-Based on given token, you can track request counts.  
+
+Based on provided token, you can track the number of requests.  
 
 Counter service generates a unique token and tracks request counts from the same user (token).  
 Envoy service accepts a request at any path. On /auth, the envoy service returns a token provided by the counter service.  
 
-If a request is made with an Authorization header and valid token, the envoy service returns a request count for the request path.  
+If a request is made with an Authorization header and a valid token, the envoy service returns the number of requests for the request path.
 
-Example series of requests:  
+Example series of requests to envoy service:  
 
-  GET /auth   	returns { "token": "token123" }  
+  GET /auth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns { "token": "token123" }  
 
-  GET / 	      returns { "count": 1 } // using token123  
+  GET /test&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns { "count": 1 } // using token123  
 
-  GET /       	returns { "count": 2 } // using token123  
+  GET /test&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns { "count": 2 } // using token123  
 
-  GET /my/path 	returns { "count": 1 } // using token123  
+  GET /my/path&nbsp;&nbsp;returns { "count": 1 } // using token123  
 
-  GET /auth   	returns { “token”: “token456” }  
+  GET /auth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns { “token”: “token456” }  
 
-  GET /       	returns { “count”: 1 } // using token456  
+  GET /test&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns { “count”: 1 } // using token456  
 
-  GET / 	      returns { “count”: 3 } // using token123  
+  GET /test&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns { “count”: 3 } // using token123  
 
 
 Prerequests
@@ -48,9 +49,13 @@ redis-server
 ```
 
 Run counter service  
-(Counter service will run on port 6381 by default, if you want to run it on different port, you have to set   COUNTER_ADDR environment variable, e.g. export COUNTER_ADDR=127.0.0.1:6373.  
-Redis is running on port 6379 by default. If you run Redis on different port you have to set REDIS_ADDR   environment variable, e.g. export REDIS_ADDR=127.0.0.1:6372)  
+
 ```
+# Counter service will run on port 6381 by default, if you want to run it on different port, you have to
+# set COUNTER_ADDR environment variable, e.g. export COUNTER_ADDR=127.0.0.1:6373.  
+# Redis is running on port 6379 by default. If you run Redis on different port you have to set REDIS_ADDR
+# environment variable, e.g. export REDIS_ADDR=127.0.0.1:6372
+
 # go to counter directory
 cd $GOPATH/src/tracker/counter
 
@@ -67,10 +72,13 @@ go run main.go
 ```
 
 Run envoy service  
-(Envoy service will run on port 6380 by default, if you want to run it on different port, you have to set ENVOY_ADDR environment variable, e.g. export ENVOY_ADDR=127.0.0.1:6374.
-Counter service will run on port 6381 by default, if you want to run it on different port, you have to set   COUNTER_ADDR environment variable, e.g. export COUNTER_ADDR=127.0.0.1:6373.)  
 
 ```
+# Envoy service will run on port 6380 by default, if you want to run it on different port, you have to set
+# ENVOY_ADDR environment variable, e.g. export ENVOY_ADDR=127.0.0.1:6374.
+# Counter service will run on port 6381 by default, if you want to run it on different port,
+# you have to set COUNTER_ADDR environment variable, e.g. export COUNTER_ADDR=127.0.0.1:6373.
+
 # go to envoy directory
 cd $GOPATH/src/tracker/envoy
 
@@ -96,8 +104,10 @@ protoc --go_out=plugins=grpc:./rpc/ manager_rpc.proto
 
 Endpoints:
 ----------
+```
 GET /auth  
-GET /<any path>   // the Authorization header with the token value is required
+GET /<any path>   # the Authorization header with the token value is required
+```
 
 You have to add the Authorization header with the token value to the second request.  
 To get token use /auth endpoint  

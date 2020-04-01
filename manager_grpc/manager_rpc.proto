@@ -1,0 +1,23 @@
+syntax = 'proto3';
+package manager_rpc;
+
+import "google/protobuf/empty.proto";
+
+service CounterService {
+  rpc NewToken(google.protobuf.Empty) returns (NewTokenResponse);
+  rpc UpdateCounter(UpdateCounterRequest) returns (UpdateCounterResponse);
+}
+
+message UpdateCounterRequest {
+    string token = 1;
+    string path = 2;
+}
+
+message NewTokenResponse {
+    string token = 1;
+}
+
+message UpdateCounterResponse {
+    bool success = 1;
+    int64 counter = 2;
+}

@@ -67,9 +67,7 @@ func (ms CounterService) UpdateCounter(ctx context.Context, in *manager_rpc.Upda
 	}
 
 	key := fmt.Sprintf("%s_%s", token, path)
-	connIncr := ms.RedisPool.Get()
-	defer connIncr.Close()
-	counter, err := connIncr.Do("INCR", key)
+	counter, err := conn.Do("INCR", key)
 	if err != nil {
 		return nil, fmt.Errorf("redis error: %v", err)
 	}
